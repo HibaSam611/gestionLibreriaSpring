@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.gestionlibreria.fx.LibroViewController"
+            style="-fx-background-color: #f4f6f9;">
+
+    <!-- CABECERA -->
+    <top>
+        <VBox alignment="CENTER" spacing="4"
+              style="-fx-background-color: #2196F3; -fx-padding: 16;">
+            <Label text="GestionLibreria" style="-fx-text-fill: white; -fx-font-size: 22; -fx-font-weight: bold;"/>
+            <Label text="Gestiona tu coleccion de libros" style="-fx-text-fill: #bbdefb; -fx-font-size: 13;"/>
+        </VBox>
+    </top>
+
+    <!-- TABLA CENTRAL -->
+    <center>
+        <VBox spacing="10" style="-fx-padding: 12;">
+            <!-- Barra de busqueda -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <TextField fx:id="campoBusqueda" promptText="Buscar por titulo..." prefColumnCount="25"/>
+                <Button text="Buscar" onAction="#onBuscar"
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                <Button text="Mostrar todos" onAction="#onRefrescar"
+                        style="-fx-background-color: #607d8b; -fx-text-fill: white;"/>
+            </HBox>
+
+            <TableView fx:id="tablaLibros" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colTitulo" text="Titulo"  prefWidth="200"/>
+                    <TableColumn fx:id="colAutor"  text="Autor"   prefWidth="150"/>
+                    <TableColumn fx:id="colGenero" text="Genero"  prefWidth="110"/>
+                    <TableColumn fx:id="colAnio"   text="Año"     prefWidth="60"/>
+                    <TableColumn fx:id="colIsbn"   text="ISBN"    prefWidth="120"/>
+                    <TableColumn fx:id="colNota"   text="Nota"    prefWidth="55"/>
+                    <TableColumn fx:id="colLeido"  text="Leido"   prefWidth="55"/>
+                </columns>
+            </TableView>
+
+            <Label fx:id="etiquetaEstado" text="Listo" style="-fx-text-fill: #607d8b; -fx-font-size: 12;"/>
+        </VBox>
+    </center>
+
+    <!-- FORMULARIO LATERAL -->
+    <right>
+        <VBox spacing="10" style="-fx-padding: 14; -fx-background-color: white;
+              -fx-border-color: #ddd; -fx-border-width: 0 0 0 1;" prefWidth="260">
+
+            <Label text="Datos del libro" style="-fx-font-size: 15; -fx-font-weight: bold;"/>
+            <Separator/>
+
+            <Label text="Titulo"/>
+            <TextField fx:id="campoTitulo" promptText="Ej: Don Quijote"/>
+
+            <Label text="Autor"/>
+            <TextField fx:id="campoAutor" promptText="Ej: Cervantes"/>
+
+            <Label text="Genero"/>
+            <ComboBox fx:id="comboGenero" promptText="Selecciona genero" maxWidth="Infinity"/>
+
+            <Label text="Año"/>
+            <TextField fx:id="campoAnio" promptText="Ej: 1605"/>
+
+            <Label text="ISBN"/>
+            <TextField fx:id="campoIsbn" promptText="Ej: 9788420412146"/>
+
+            <Label text="Puntuacion (0-10)"/>
+            <Slider fx:id="sliderNota" min="0" max="10" value="5"
+                    showTickLabels="true" showTickMarks="true"
+                    majorTickUnit="2" minorTickCount="1"/>
+
+            <CheckBox fx:id="checkLeido" text="Ya lo he leido"/>
+
+            <Separator/>
+
+            <HBox spacing="8">
+                <Button text="Guardar" onAction="#onGuardar"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="Actualizar" onAction="#onActualizar"
+                        style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+                <Button text="Eliminar" onAction="#onEliminar"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+            </HBox>
+
+            <Button text="Limpiar campos" onAction="#onLimpiar" maxWidth="Infinity"
+                    style="-fx-background-color: #9E9E9E; -fx-text-fill: white;"/>
+        </VBox>
+    </right>
+</BorderPane>

@@ -4,55 +4,45 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
+// Esta clase captura TODOS los errores que ocurren en el backend
+// y devuelve mensajes claros en JSON en vez de errores feos de Java
+// Asi el usuario siempre sabe que ha pasado
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /* ── Libro no encontrado → 404 ────────────────────── */
-    @ExceptionHandler(BookNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(BookNotFoundException ex) {
-        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
-    }
-
-    /* ── ISBN duplicado → 409 ─────────────────────────── */
-    @ExceptionHandler(DuplicateIsbnException.class)
-    public ResponseEntity<Map<String, Object>> handleDuplicate(DuplicateIsbnException ex) {
-        return buildResponse(HttpStatus.CONFLICT, ex.getMessage());
-    }
-
-    /* ── Errores de validación → 400 ──────────────────── */
+    // Cuando las validaciones fallan (campos vacios, numeros fuera de rango, etc.)
+    // Devuelve un error 400 (Bad Request) con los campos que fallaron
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, String> fieldErrors = new HashMap<>();
-        for (FieldError fe : ex.getBindingResult().getFieldErrors()) {
-            fieldErrors.put(fe.getField(), fe.getDefaultMessage());
+    public ResponseEntity<Map<String, String>> manejarErroresValidacion(MethodArgumentNotValidException ex) {
+        Map<String, String> errores = new HashMap<>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errores.put(error.getField(), error.getDefaultMessage());
         }
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now().toString());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Error de validación");
-        body.put("details", fieldErrors);
-        return ResponseEntity.badRequest().body(body);
+        return ResponseEntity.badRequest().body(errores);
     }
 
-    /* ── Cualquier otra excepción → 500 ───────────────── */
+    // Cuando lanzamos un RuntimeException nosotros (libro no encontrado, etc.)
+    // Devuelve un error 404 (Not Found)
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> manejarErrorRuntime(RuntimeException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    // Para cualquier otro error inesperado
+    // Devuelve un error 500 (Internal Server Error)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-                "Error interno del servidor: " + ex.getMessage());
-    }
-
-    /* ── Helper ───────────────────────────────────────── */
-    private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status, String message) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now().toString());
-        body.put("status", status.value());
-        body.put("error", message);
-        return ResponseEntity.status(status).body(body);
+    public ResponseEntity<Map<String, String>> manejarErrorGeneral(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Error interno del servidor: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }
