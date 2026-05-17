@@ -17,8 +17,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-// Tests para comprobar que el servicio funciona bien
-// Usamos Mockito para simular el repositorio (asi no necesitamos MongoDB real)
 
 @ExtendWith(MockitoExtension.class)
 class LibroServiceTest {
@@ -59,7 +57,7 @@ class LibroServiceTest {
     @Test
     @DisplayName("obtenerTodos devuelve la lista de libros")
     void testObtenerTodos() {
-        // Simulamos que el repositorio devuelve un libro
+        // simulamos que el repositorio devuelve un libro
         when(repositorio.findAll()).thenReturn(List.of(crearLibroPrueba()));
 
         List<Libro> resultado = servicio.obtenerTodos();
@@ -117,7 +115,7 @@ class LibroServiceTest {
     void testEliminarNoExiste() {
         when(repositorio.existsById("999")).thenReturn(false);
 
-        // Comprobamos que lanza la excepcion
+        // Comprobamos que lanza la excepcion bien
         RuntimeException error = assertThrows(RuntimeException.class, () -> {
             servicio.eliminar("999");
         });

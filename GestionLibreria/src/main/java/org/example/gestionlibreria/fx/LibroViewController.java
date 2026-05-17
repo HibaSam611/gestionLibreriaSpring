@@ -20,13 +20,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-// Este es el controlador de la interfaz grafica
-// Maneja los botones, la tabla y los campos del formulario
-// Se comunica con el backend mediante peticiones HTTP
-
 public class LibroViewController {
 
-    // -- Componentes de la pantalla (conectados al FXML) --
     @FXML private TableView<Map<String, Object>> tablaLibros;
     @FXML private TableColumn<Map<String, Object>, String>  colTitulo, colAutor, colGenero, colIsbn;
     @FXML private TableColumn<Map<String, Object>, Number>  colAnio, colNota;
@@ -38,17 +33,14 @@ public class LibroViewController {
     @FXML private CheckBox checkLeido;
     @FXML private Label etiquetaEstado;
 
-    // -- Variables internas --
     private final String URL_API = "http://localhost:8080/api/books";
     private final HttpClient clienteHttp = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
     private final ObservableList<Map<String, Object>> listaLibros = FXCollections.observableArrayList();
     private String idSeleccionado = null; // id del libro que tenemos seleccionado en la tabla
 
-    // -- Se ejecuta al abrir la ventana --
     @FXML
     public void initialize() {
-        // Rellenamos el combo de generos
         comboGenero.setItems(FXCollections.observableArrayList(
                 "Novela", "Ciencia ficcion", "Fantasia", "Terror",
                 "Historia", "Biografia", "Poesia", "Ensayo",
@@ -76,11 +68,8 @@ public class LibroViewController {
         cargarTodosLosLibros();
     }
 
-    // ======================================================
-    //  BOTONES
-    // ======================================================
 
-    // Boton GUARDAR - crea un libro nuevo
+    // boton GUARDAR --> crea un libro nuevo
     @FXML
     private void onGuardar() {
         String json = construirJson();
@@ -114,7 +103,7 @@ public class LibroViewController {
         }
     }
 
-    // Boton ACTUALIZAR - modifica el libro que tenemos seleccionado
+    // boton ACTUALIZAR --> modifica el libro que tenemos seleccionado
     @FXML
     private void onActualizar() {
         if (idSeleccionado == null) {
@@ -153,7 +142,7 @@ public class LibroViewController {
         }
     }
 
-    // Boton ELIMINAR - borra el libro seleccionado
+    // Boton ELIMINAR --> borra el libro seleccionado
     @FXML
     private void onEliminar() {
         if (idSeleccionado == null) {
@@ -196,7 +185,7 @@ public class LibroViewController {
         });
     }
 
-    // Boton BUSCAR - busca libros por titulo
+    // Boton BUSCAR --> busca libros por titulo
     @FXML
     private void onBuscar() {
         String texto = campoBusqueda.getText().trim();
@@ -226,22 +215,18 @@ public class LibroViewController {
         }
     }
 
-    // Boton REFRESCAR - vuelve a cargar todos
+    // Boton REFRESCAR --> vuelve a cargar todos
     @FXML
     private void onRefrescar() {
         campoBusqueda.clear();
         cargarTodosLosLibros();
     }
 
-    // Boton LIMPIAR - limpia el formulario
+    // Boton LIMPIAR --> limpia el formulario
     @FXML
     private void onLimpiar() {
         limpiarFormulario();
     }
-
-    // ======================================================
-    //  METODOS AUXILIARES
-    // ======================================================
 
     // Carga todos los libros del backend y los pone en la tabla
     private void cargarTodosLosLibros() {
@@ -280,13 +265,12 @@ public class LibroViewController {
         String anioTexto = campoAnio.getText().trim();
         String isbn   = campoIsbn.getText().trim();
 
-        // Comprobamos que no haya campos vacios
         if (titulo.isEmpty() || autor.isEmpty() || genero == null || anioTexto.isEmpty() || isbn.isEmpty()) {
             mostrarAviso("Todos los campos son obligatorios");
             return null;
         }
 
-        // Comprobamos que el año sea un numero valido
+        // comprobamos que el año sea un numero valido
         int anio;
         try {
             anio = Integer.parseInt(anioTexto);
@@ -305,7 +289,7 @@ public class LibroViewController {
         );
     }
 
-    // Rellena el formulario con los datos del libro que hemos seleccionado en la tabla
+    // rellena el formulario con los datos del libro que hemos seleccionado en la tabla
     private void rellenarFormulario(Map<String, Object> fila) {
         idSeleccionado = obtenerTexto(fila, "id");
         campoTitulo.setText(obtenerTexto(fila, "titulo"));
@@ -318,7 +302,7 @@ public class LibroViewController {
         mostrarEstado("Editando: " + obtenerTexto(fila, "titulo"));
     }
 
-    // Deja el formulario vacio
+    // deja el formulario vacio
     private void limpiarFormulario() {
         idSeleccionado = null;
         campoTitulo.clear();
@@ -340,7 +324,6 @@ public class LibroViewController {
         }
     }
 
-    // -- Metodos para sacar valores de un mapa sin que pete --
 
     private String obtenerTexto(Map<String, Object> mapa, String clave) {
         Object valor = mapa.get(clave);
@@ -361,8 +344,6 @@ public class LibroViewController {
         Object valor = mapa.get(clave);
         return valor instanceof Boolean && (Boolean) valor;
     }
-
-    // -- Metodos para mostrar mensajes --
 
     private void mostrarEstado(String mensaje) {
         Platform.runLater(() -> etiquetaEstado.setText(mensaje));

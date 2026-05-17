@@ -10,14 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
-// Esta clase captura TODOS los errores que ocurren en el backend
-// y devuelve mensajes claros en JSON en vez de errores feos de Java
-// Asi el usuario siempre sabe que ha pasado
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Cuando las validaciones fallan (campos vacios, numeros fuera de rango, etc.)
     // Devuelve un error 400 (Bad Request) con los campos que fallaron
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> manejarErroresValidacion(MethodArgumentNotValidException ex) {
@@ -28,7 +24,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errores);
     }
 
-    // Cuando lanzamos un RuntimeException nosotros (libro no encontrado, etc.)
     // Devuelve un error 404 (Not Found)
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> manejarErrorRuntime(RuntimeException ex) {
@@ -37,7 +32,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    // Para cualquier otro error inesperado
     // Devuelve un error 500 (Internal Server Error)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> manejarErrorGeneral(Exception ex) {

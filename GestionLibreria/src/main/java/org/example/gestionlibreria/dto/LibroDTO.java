@@ -2,10 +2,7 @@ package org.example.gestionlibreria.dto;
 
 import jakarta.validation.constraints.*;
 
-// DTO = Data Transfer Object (objeto de transferencia de datos)
-// Es lo que recibe el controlador cuando el usuario envia datos
-// Es parecido al modelo Book pero SIN el campo id (el id lo pone MongoDB)
-// Asi separamos lo que llega del cliente del modelo de la base de datos
+
 
 public class LibroDTO {
 
@@ -30,10 +27,8 @@ public class LibroDTO {
 
     private boolean leido;
 
-    // Constructor vacio (lo necesita Spring para parsear el JSON)
     public LibroDTO() {}
 
-    // Constructor con todos los campos
     public LibroDTO(String titulo, String autor, String genero, int anio,
                     String isbn, double nota, boolean leido) {
         this.titulo = titulo;
@@ -44,8 +39,6 @@ public class LibroDTO {
         this.nota = nota;
         this.leido = leido;
     }
-
-    // Getters y Setters
 
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }

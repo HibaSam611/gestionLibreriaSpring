@@ -8,21 +8,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-// El servicio contiene la logica de la aplicacion
-// Es el intermediario entre el controlador (que recibe las peticiones)
-// y el repositorio (que accede a la base de datos)
-
 @Service
 public class LibroService {
 
     private final LibroRepository repositorio;
 
-    // Spring inyecta el repositorio automaticamente por el constructor
     public LibroService(LibroRepository repositorio) {
         this.repositorio = repositorio;
     }
 
-    // -- OPERACIONES CRUD --
 
     // Obtener todos los libros
     public List<Libro> obtenerTodos() {
@@ -34,7 +28,7 @@ public class LibroService {
         return repositorio.findById(id);
     }
 
-    // Guardar un libro nuevo (recibe el DTO y lo convierte a Book)
+    // Guardar un libro nuevo
     public Libro guardar(LibroDTO dto) {
         Libro libro = convertirDtoABook(dto);
         return repositorio.save(libro);
@@ -43,8 +37,7 @@ public class LibroService {
     // Actualizar un libro que ya existe
     public Libro actualizar(String id, LibroDTO dto) {
         // Primero comprobamos que el libro existe
-        Libro libroExistente = repositorio.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontro el libro con ID: " + id));
+        Libro libroExistente = repositorio.findById(id).orElseThrow(() -> new RuntimeException("No se encontro el libro con ID: " + id));
 
         // Actualizamos sus campos con los datos nuevos del DTO
         libroExistente.setTitulo(dto.getTitulo());
@@ -67,8 +60,7 @@ public class LibroService {
         repositorio.deleteById(id);
     }
 
-    // -- BUSQUEDAS --
-
+    // Busquedas
     public List<Libro> buscarPorTitulo(String titulo) {
         return repositorio.findByTituloContainingIgnoreCase(titulo);
     }
@@ -81,9 +73,9 @@ public class LibroService {
         return repositorio.findByGeneroIgnoreCase(genero);
     }
 
-    // -- METODOS DE CONVERSION (DTO <-> Book) --
+    // (DTO <-> Libro)
 
-    // Convierte un DTO a un Book para poder guardarlo en la base de datos
+    // Convierte un DTO a un Libro para poder guardarlo en la base de datos
     private Libro convertirDtoABook(LibroDTO dto) {
         Libro libro = new Libro();
         libro.setTitulo(dto.getTitulo());
@@ -96,7 +88,7 @@ public class LibroService {
         return libro;
     }
 
-    // Convierte un Book a DTO para enviarlo al cliente
+    // Convierte un Libro a DTO para enviarlo al cliente
     public LibroDTO convertirBookADto(Libro libro) {
         LibroDTO dto = new LibroDTO();
         dto.setTitulo(libro.getTitulo());

@@ -5,8 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-// Esta clase representa un libro en la base de datos MongoDB
-// Cada objeto Book se guarda como un documento en la coleccion "books"
+
 
 @Document(collection = "books")
 @Data                   // Lombok genera getters, setters, toString, equals y hashCode

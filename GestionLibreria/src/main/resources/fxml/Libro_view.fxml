@@ -8,7 +8,6 @@
             fx:controller="org.example.gestionlibreria.fx.LibroViewController"
             style="-fx-background-color: #f4f6f9;">
 
-    <!-- CABECERA -->
     <top>
         <VBox alignment="CENTER" spacing="4"
               style="-fx-background-color: #2196F3; -fx-padding: 16;">
@@ -17,10 +16,8 @@
         </VBox>
     </top>
 
-    <!-- TABLA CENTRAL -->
     <center>
         <VBox spacing="10" style="-fx-padding: 12;">
-            <!-- Barra de busqueda -->
             <HBox spacing="8" alignment="CENTER_LEFT">
                 <TextField fx:id="campoBusqueda" promptText="Buscar por titulo..." prefColumnCount="25"/>
                 <Button text="Buscar" onAction="#onBuscar"
@@ -45,7 +42,6 @@
         </VBox>
     </center>
 
-    <!-- FORMULARIO LATERAL -->
     <right>
         <VBox spacing="10" style="-fx-padding: 14; -fx-background-color: white;
               -fx-border-color: #ddd; -fx-border-width: 0 0 0 1;" prefWidth="260">
